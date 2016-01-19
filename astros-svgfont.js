@@ -17,9 +17,15 @@ module.exports = new astro.Middleware({
 	if(!fs.existsSync(path.join(asset.prjCfg.img,'svg'))){
 		return;
 	}
+    if(!asset.prjCfg.fontName){
+        console.error('未设置字体名称');
+        return;
+    }
+    if(!asset.prjCfg.fontUrl){
+        console.error('未设置字体路径');
+        return;
+    }
     var svgJson = svg.svgToFont(path.join(asset.prjCfg.img,'svg'),path.join(asset.prjCfg.img,'fonts'),asset.prjCfg.fontName);
-    console.log(path.join(asset.prjCfg.img,'fonts'));
-    console.log(asset.request.url);
 
     var cssHead = svg.getClassHead(asset.prjCfg.fontUrl,'@{iconFont}','@{version}');
     //console.log(svgJson);
