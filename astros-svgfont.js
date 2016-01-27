@@ -15,7 +15,7 @@ module.exports = new astro.Middleware({
 
 	//console.log(asset.prjCfg);
 	if(!fs.existsSync(path.join(asset.prjCfg.img,'svg'))){
-		return;
+		next(asset);
 	}
     if(!asset.prjCfg.fontName){
         console.error('未设置字体名称');
@@ -25,16 +25,23 @@ module.exports = new astro.Middleware({
         console.error('未设置字体路径');
         return;
     }
-    var svgJson = svg.svgToFont(path.join(asset.prjCfg.img,'svg'),path.join(asset.prjCfg.img,'fonts'),asset.prjCfg.fontName);
+    var svgDir = path.join(asset.prjCfg.img,'svg');
 
-    var cssHead = svg.getClassHead(asset.prjCfg.fontUrl,'@{iconFont}','@{version}');
-    //console.log(svgJson);
+
+    var tempSvg = new svg(svgDir,asset.prjCfg.fontName);
+
+    tempSvg.outPut(path.join(asset.prjCfg.img,'fonts'));
+
+    var cssHead = tempSvg.getClassHead(asset.prjCfg.fontUrl,'1');
+    
+    var svgJson = tempSvg.getInfos();
     for(var svgObj in svgJson){
     	var temp = "."+svgJson[svgObj].fileName+":before {\n";
     	temp = temp + 'content: "\\'+svgJson[svgObj].content+'";\n';
-    	temp = temp + '}';
+    	temp = temp + '}\n';
     	cssHead = cssHead + temp;
     }
+
     asset.data = asset.data || '';
     asset.data = cssHead + asset.data;
     next(asset);
