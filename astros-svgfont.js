@@ -25,6 +25,8 @@ module.exports = new astro.Middleware({
         console.error('未设置字体路径');
         return;
     }
+    var ver = asset.prjCfg.fontVersion || '';
+
     var svgDir = path.join(asset.prjCfg.img,'svg');
 
 
@@ -32,7 +34,7 @@ module.exports = new astro.Middleware({
 
     tempSvg.outPut(path.join(asset.prjCfg.img,'fonts'));
 
-    var cssHead = tempSvg.getClassHead(asset.prjCfg.fontUrl,'1');
+    var cssHead = tempSvg.getClassHead(asset.prjCfg.fontUrl,ver);
     
     var svgJson = tempSvg.getInfos();
     for(var svgObj in svgJson){
