@@ -12,29 +12,29 @@ module.exports = new astro.Middleware({
     modType: 'page',
     fileType: 'css'
 }, function(asset, next) {
-
-	//console.log(asset.prjCfg);
-	if(!fs.existsSync(path.join(asset.prjCfg.img,'svg'))){
+    console.log(this);
+	//console.log(this.config);
+	if(!fs.existsSync(path.join(this.config.img,'svg'))){
 		next(asset);
 	}
-    if(!asset.prjCfg.fontName){
+    if(!this.config.fontName){
         console.error('未设置字体名称');
         return;
     }
-    if(!asset.prjCfg.fontUrl){
+    if(!this.config.fontUrl){
         console.error('未设置字体路径');
         return;
     }
-    var ver = asset.prjCfg.fontVersion || '';
+    var ver = this.config.fontVersion || '';
 
-    var svgDir = path.join(asset.prjCfg.img,'svg');
+    var svgDir = path.join(this.config.img,'svg');
 
 
-    var tempSvg = new svg(svgDir,asset.prjCfg.fontName);
+    var tempSvg = new svg(svgDir,this.config.fontName);
 
-    tempSvg.outPut(path.join(asset.prjCfg.img,'fonts'));
+    tempSvg.outPut(path.join(this.config.img,'fonts'));
 
-    var cssHead = tempSvg.getClassHead(asset.prjCfg.fontUrl,ver);
+    var cssHead = tempSvg.getClassHead(this.config.fontUrl,ver);
     
     var svgJson = tempSvg.getInfos();
     for(var svgObj in svgJson){
