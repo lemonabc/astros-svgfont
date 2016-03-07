@@ -12,9 +12,8 @@ module.exports = new astro.Middleware({
     modType: 'page',
     fileType: 'css'
 }, function(asset, next) {
-    console.log(this);
 	//console.log(this.config);
-	if(!fs.existsSync(path.join(this.config.img,'svg'))){
+	if(!fs.existsSync(path.join(asset.prjCfg.img,'svg'))){
 		next(asset);
 	}
     if(!this.config.fontName){
@@ -27,12 +26,12 @@ module.exports = new astro.Middleware({
     }
     var ver = this.config.fontVersion || '';
 
-    var svgDir = path.join(this.config.img,'svg');
+    var svgDir = path.join(asset.prjCfg.img,'svg');
 
 
     var tempSvg = new svg(svgDir,this.config.fontName);
 
-    tempSvg.outPut(path.join(this.config.img,'fonts'));
+    tempSvg.outPut(path.join(asset.prjCfg.img,'fonts'));
 
     var cssHead = tempSvg.getClassHead(this.config.fontUrl,ver);
     
