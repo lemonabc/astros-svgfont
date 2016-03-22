@@ -12,38 +12,41 @@ module.exports = new astro.Middleware({
     modType: 'page',
     fileType: 'css'
 }, function(asset, next) {
-	//console.log(this.config);
-	if(!fs.existsSync(path.join(asset.prjCfg.img,'svg'))){
+	var assets = asset.prjCfg.assets;
+    var svgDir = path.join(assets,'svg');
+    var fontUrl = this.config.fontUrl;
+    var base64 = this.config.base64 || false;
+
+	if(!fs.existsSync(svgDir)){
+        console.error('不存在svg目录');
 		next(asset);
 	}
-    if(!this.config.fontName){
-        console.error('未设置字体名称');
-        return;
-    }
     if(!this.config.fontUrl){
         console.error('未设置字体路径');
         return;
     }
-    var ver = this.config.fontVersion || '';
 
-    var svgDir = path.join(asset.prjCfg.img,'svg');
-
-
-    var tempSvg = new svg(svgDir,this.config.fontName);
-
-    tempSvg.outPut(path.join(asset.prjCfg.img,'fonts'));
-
-    var cssHead = tempSvg.getClassHead(this.config.fontUrl,ver);
+    //获取svg目录下所有文件夹，文件夹名称为字体名称
+    var dirs = file.getAllDirsSync(svgDir);
+    if (dirs.length) {
+        dirs.forEach(function(dir, index) {
+            var svgDir = path.join(dir);
+            var fontName = path.basename(dir);
+            var tempSvg = new svg(svgDir,fontName);
+            tempSvg.outPut(path.join(assets,'fonts'));
+            var cssHead = tempSvg.getClassHead(fontUrl,base64);
     
-    var svgJson = tempSvg.getInfos();
-    for(var svgObj in svgJson){
-    	var temp = "."+svgJson[svgObj].fileName+":before {\n";
-    	temp = temp + 'content: "\\'+svgJson[svgObj].content+'";\n';
-    	temp = temp + '}\n';
-    	cssHead = cssHead + temp;
+            var svgJson = tempSvg.getInfos();
+            for(var svgObj in svgJson){
+                var temp = "."+svgJson[svgObj].fileName+":before {\n";
+                temp = temp + 'content: "\\'+svgJson[svgObj].content+'";\n';
+                temp = temp + '}\n';
+                cssHead = cssHead + temp;
+            }
+            asset.data = asset.data || '';
+            asset.data = cssHead + asset.data;
+        });
     }
-
-    asset.data = asset.data || '';
-    asset.data = cssHead + asset.data;
+    
     next(asset);
 });
