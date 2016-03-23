@@ -1,41 +1,79 @@
 ##说明
-astros中间件  
-自动通过img/svg目录下的svg图标生成eot,svg,ttf,woff四种字体,并自动生成对应svg名的css代码，插入到通用less之后和对应页面less之前。  
 
-* 自动生成的@font-face为：
+本项目为[Astros](https://github.com/lemonabc/astros-example)插件
+
+自动通过img/svg目录下的svg图标生成eot,svg,ttf,woff四种字体,并自动生成对应svg名的css代码，插入到通用less之后和对应页面less之前。
+
+### 配置
+static.js需要配置两个参数
+
+```
+{
+    name:'astros-svgfont',
+    config:{
+        fontUrl:'/fonts/',  //字体文件存放路径
+        base64:true         //移动端兼容性最好，pc不建议使用
+    }
+}
+```
+
+### SVG文件存放位置
+  
+```
+--assets
+  --svg
+      --icons（生成的字体名称就是目录名称，即icons）
+        --car.svg
+        --user.svg
+      --button
+        --loading.svg
+```
+
+
+根据以上目录结构，生成的字体分别icons和button
+
+### 该中间件会根据svg名称自动生成对应的class，以icons为例：
+
+#### @font-face（自动生成的）
 
 ```
 @font-face {
-	font-family: '@fontName';
-	src:url('@fontUrl/@fontName.eot?v=@{version}');
-	src:url('@fontUrl/@fontName.eot?v=@{version}') format('embedded-opentype'),
-		url('@fontUrl/@fontName.woff?v=@{version}') format('woff'),
-		url('@fontUrl/@fontName.ttf?v=@{version}') format('truetype'),
-		url('@fontUrl/@fontName.svg?v=@{version}') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: "icons";
+    src: url("/fonts/font2.eot?v=true");
+    src: url("/fonts/font2.eot?v=true") format("embedded-opentype"), url("/fonts/font2.woff?v=true") format("woff"), url("/fonts/font2.ttf?v=true") format("truetype"), url("/fonts/font2.svg?v=true") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+```
+
+##### CSS(自动生成)
+```
+.i-loading:before {
+     content: "\e900";
+    
+ }
+ .i-car:before {
+    content: "\e605";
  }
 ```
- 
-* class名会根据svg名称自动生成，例如：  
-img/svg下面的存在i-house,i-next等svg图标  
-生成的css代码为:
+
+### 使用方式
+
+### CSS
+```
+/* ICON基础类 */
+.m-icon{
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    color: #dedede;
+    font-family: "icons";
+}
+```
+
+### HTML
 
 ```
-    .i-loading:before {
-	     content: "\e900";
-	    
-	 }
-	 .i-quirt-right:before {
-	    content: "\e605";
-	 }
+<i class="m-icon i-loading"></i>
 ```
-
-###配置
-static.js需要配置两个参数
-
-    fontUrl:'/img/fonts/',
-    fontName:'cashierIconFont',
-
-* fontUrl为生成的css内，@font-face引用的font的路径  
-* fontName为生成的字体名称和font-family名。
