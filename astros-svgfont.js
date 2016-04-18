@@ -20,9 +20,11 @@ module.exports = new astro.Middleware({
 	if(!fs.existsSync(svgDir)){
         console.error('不存在svg目录');
 		next(asset);
+        return;
 	}
     if(!this.config.fontUrl){
         console.error('未设置字体路径');
+        next(asset);
         return;
     }
 
