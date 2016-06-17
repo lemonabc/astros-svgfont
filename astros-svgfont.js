@@ -12,19 +12,18 @@ module.exports = new astro.Middleware({
     modType: 'page',
     fileType: 'css'
 }, function(asset, next) {
-	var assets = asset.prjCfg.assets;
+    var assets = asset.prjCfg.assets;
     var svgDir = path.join(assets,'svg');
-    var fontUrl = this.config.fontUrl;
+    var fontUrl = this.config.fontUrl || '/fonts/';
+    var version = this.config.version || '';
     var base64 = this.config.base64 || false;
 
-	if(!fs.existsSync(svgDir)){
+    if(!fs.existsSync(svgDir)){
         console.error('不存在svg目录');
-		next(asset);
-        return;
-	}
+        next(asset);
+    }
     if(!this.config.fontUrl){
         console.error('未设置字体路径');
-        next(asset);
         return;
     }
 
@@ -36,7 +35,7 @@ module.exports = new astro.Middleware({
             var fontName = path.basename(dir);
             var tempSvg = new svg(svgDir,fontName);
             tempSvg.outPut(path.join(assets,'fonts'));
-            var cssHead = tempSvg.getClassHead(fontUrl,base64);
+            var cssHead = tempSvg.getClassHead(fontUrl,version,base64);
     
             var svgJson = tempSvg.getInfos();
             for(var svgObj in svgJson){
