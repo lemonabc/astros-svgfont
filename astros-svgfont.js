@@ -30,12 +30,21 @@ module.exports = new astro.Middleware({
         dirs.forEach(function(dir, index) {
             var svgDir = path.join(dir);
             var fontName = path.basename(dir);
-            var tempSvg = new svg(svgDir,fontName);
+            var tempSvg = new svg({
+                svgDir:svgDir,
+                nameToMD5:true,
+                fontFaceName:fontName
+            });
             tempSvg.outPut(path.join(assets,'fonts'));
-            var cssHead = tempSvg.getClassHead(self.config.fontUrl,self.config.version || '',!!self.config.base64);
+
+            var cssHead = tempSvg.getClassHead(self.config.fontUrl,!!self.config.base64);
             var svgJson = tempSvg.getInfos();
             for(var svgObj in svgJson){
-                var temp = "."+svgJson[svgObj].fileName+":before {\n";
+                var temp = "."+svgJson[svgObj].fileName+"{\n";
+                temp = temp + 'font-family: "'+fontName+'";\n';
+                temp = temp + '}\n';
+
+                var temp = temp+"."+svgJson[svgObj].fileName+":before {\n";
                 temp = temp + 'content: "\\'+svgJson[svgObj].content+'";\n';
                 temp = temp + '}\n';
                 cssHead = cssHead + temp;
