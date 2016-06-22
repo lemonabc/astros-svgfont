@@ -1,6 +1,6 @@
 {
   "name": "astros-svgfont",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Astro的插件。根据svg生成字体文件和引用",
   "main": "astros-svgfont.js",
   "scripts": {
@@ -22,10 +22,5 @@
   "bugs": {
     "url": "https://github.com/lemonabc/astros-resource-refer/issues"
   },
-  "readme": "ERROR: No README data found!",
-  "homepage": "https://github.com/lemonabc/astros-resource-refer#readme",
-  "_id": "astros-svgfont@0.0.1",
-  "_shasum": "e22b3b32da8750f593b713e5cef6d332a5569667",
-  "_from": "node_modules/astros-svgfont",
-  "_resolved": "file:node_modules/astros-svgfont"
+  "homepage": "https://github.com/lemonabc/astros-resource-refer"
 }

@@ -1,21 +1,8 @@
-##说明
+svg自动合成字体中间件
 
-本项目为[Astros](https://github.com/lemonabc/astros-example)插件
+本项目为[Astros](https://github.com/lemonabc/astros-example)中间件
 
-自动通过img/svg目录下的svg图标生成eot,svg,ttf,woff四种字体,并自动生成对应svg名的css代码，插入到通用less之后和对应页面less之前。
-
-### 配置
-static.js需要配置两个参数
-
-```
-{
-    name:'astros-svgfont',
-    config:{
-        fontUrl:'/fonts/',  //字体文件存放路径
-        base64:true         //移动端兼容性最好，pc不建议使用
-    }
-}
-```
+`astros-svgfont`会把`img/svg`目录下的svg图标生成eot，svg，ttf，woff四种字体，并自动生成对应svg名的css代码，插入到对应页面样式之前。
 
 ### SVG文件存放位置
   
@@ -72,8 +59,23 @@ static.js需要配置两个参数
 }
 ```
 
+> 注意，这里需要你自己实现icon基类，引用对应的字体
+
 ### HTML
 
 ```
 <i class="m-icon i-loading"></i>
 ```
+
+
+### 配置
+如果需要指定字体生成目录，可以通过 fontPath参数配置
+
+```
+{
+    name:'astros-svgfont',
+    config:{
+        fontPath:'/fonts/',  //字体文件存放路径，相对于 root/asset 路径
+        base64:true          //移动端兼容性最好，pc不建议使用
+    }
+}

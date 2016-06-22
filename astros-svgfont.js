@@ -16,7 +16,7 @@ module.exports = new astro.Middleware({
     var svgDir = path.join(assets,'svg');
 
     if(!fs.existsSync(svgDir)){
-        console.error('不存在svg目录,请参考文档创建目录');
+        console.error('不存在svg目录，请参考文档创建目录');
         next(asset);
         return;
     }
