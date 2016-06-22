@@ -1,13 +1,13 @@
 {
   "name": "astros-svgfont",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Astro的插件。根据svg生成字体文件和引用",
   "main": "astros-svgfont.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-      "svgfont":"~1.0.2"
+      "svgfont":"~1.0.4"
   },
   "repository": {
     "type": "git",
