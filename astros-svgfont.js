@@ -21,9 +21,7 @@ module.exports = new astro.Middleware({
         return;
     }
     var self = this;
-    if(!self.config.fontPath){
-        self.config.fontPath = self.config.fontUrl || '/fonts/';
-    }
+    
 
     //获取svg目录下所有文件夹，文件夹名称为字体名称
     var dirs = file.getAllDirsSync(svgDir);
@@ -36,8 +34,14 @@ module.exports = new astro.Middleware({
                 nameToMD5:true,
                 fontFaceName:fontName
             });
-            tempSvg.outPut(path.join(assets,'fonts'));
+            //创建字体目录
+            var tempfile = path.join(assets,'fonts',fontName);
 
+            tempSvg.outPut(tempfile,true);
+
+            if(!self.config.fontPath){
+                self.config.fontPath = self.config.fontUrl || '/fonts/'+fontName+'/';
+            }
             var cssHead = tempSvg.getClassHead(self.config.fontPath,!!self.config.base64);
             var svgJson = tempSvg.getInfos();
             for(var svgObj in svgJson){
