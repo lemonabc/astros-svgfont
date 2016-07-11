@@ -13,15 +13,15 @@ module.exports = new astro.Middleware({
     fileType: 'css'
 }, function(asset, next) {
     var assets = asset.prjCfg.assets;
-    var svgDir = path.join(assets,'svg');
+    var svgDir = path.join(assets, 'svg');
 
-    if(!fs.existsSync(svgDir)){
+    if (!fs.existsSync(svgDir)) {
         console.error('不存在svg目录，请参考文档创建目录');
         next(asset);
         return;
     }
     var self = this;
-    
+
 
     //获取svg目录下所有文件夹，文件夹名称为字体名称
     var dirs = file.getAllDirsSync(svgDir);
@@ -30,27 +30,27 @@ module.exports = new astro.Middleware({
             var svgDir = path.join(dir);
             var fontName = path.basename(dir);
             var tempSvg = new svg({
-                svgDir:svgDir,
-                nameToMD5:true,
-                fontFaceName:fontName
+                svgDir: svgDir,
+                nameToMD5: true,
+                fontFaceName: fontName
             });
             //创建字体目录
-            var tempfile = path.join(assets,'fonts',fontName);
+            var tempfile = path.join(assets, 'fonts', fontName);
 
-            tempSvg.outPut(tempfile,true);
+            tempSvg.outPut(tempfile, true);
 
-            if(!self.config.fontPath){
-                self.config.fontPath = self.config.fontUrl || '/fonts/'+fontName+'/';
+            if (!self.config.fontPath) {
+                self.config.fontPath = self.config.fontUrl + fontName + '/' || '/fonts/' + fontName + '/';
             }
-            var cssHead = tempSvg.getClassHead(self.config.fontPath,!!self.config.base64);
+            var cssHead = tempSvg.getClassHead(self.config.fontPath, !!self.config.base64);
             var svgJson = tempSvg.getInfos();
-            for(var svgObj in svgJson){
-                var temp = "."+svgJson[svgObj].fileName+"{\n";
-                temp = temp + 'font-family: "'+fontName+'";\n';
+            for (var svgObj in svgJson) {
+                var temp = "." + svgJson[svgObj].fileName + "{\n";
+                temp = temp + 'font-family: "' + fontName + '";\n';
                 temp = temp + '}\n';
 
-                var temp = temp+"."+svgJson[svgObj].fileName+":before {\n";
-                temp = temp + 'content: "\\'+svgJson[svgObj].content+'";\n';
+                var temp = temp + "." + svgJson[svgObj].fileName + ":before {\n";
+                temp = temp + 'content: "\\' + svgJson[svgObj].content + '";\n';
                 temp = temp + '}\n';
                 cssHead = cssHead + temp;
             }
@@ -58,6 +58,6 @@ module.exports = new astro.Middleware({
             asset.data = cssHead + asset.data;
         });
     }
-    
+
     next(asset);
 });
