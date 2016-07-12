@@ -40,7 +40,7 @@ module.exports = new astro.Middleware({
             tempSvg.outPut(tempfile, true);
 
             if (!self.config.fontPath) {
-                self.config.fontPath = self.config.fontUrl + fontName + '/' || '/fonts/' + fontName + '/';
+                self.config.fontPath = (self.config.fontUrl || '/fonts/') + fontName + '/';
             }
             var cssHead = tempSvg.getClassHead(self.config.fontPath, !!self.config.base64);
             var svgJson = tempSvg.getInfos();
